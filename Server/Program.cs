@@ -10,6 +10,8 @@ namespace Server
     {
         static void Main()
         {
+            Console.WriteLine("Start...");
+            
             var ip = "127.0.0.1";
             var port = 8005;
 
@@ -18,10 +20,13 @@ namespace Server
             var listen = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listen.Bind(ipEndPoint);
             listen.Listen(10);
+            
+            Console.WriteLine("Listen...");
 
             while (true)
             {
                 var connect = listen.Accept();
+                Console.WriteLine("Accept...");
 
                 var buffer = new byte[256];
                 var data = new List<byte>();
@@ -35,9 +40,11 @@ namespace Server
                 var t = data.ToArray();
                 var msg = Encoding.Unicode.GetString(t, 0, t.Length);
                 
-                Console.WriteLine(msg);
+                Console.WriteLine($"Client: {msg}");
                 
                 connect.Send(Encoding.Unicode.GetBytes($"Ваше сообщение: {msg}"));
+                
+                Console.WriteLine("Close...");
                 
                 connect.Shutdown(SocketShutdown.Both);
                 connect.Close();
